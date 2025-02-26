@@ -1,15 +1,15 @@
-import pytest
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
+import allure
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from locators.order_page_locators import OrderPageLocators
-import allure
+from pages.base_page import BasePage
 
-
-class OrderPage:
-
+class OrderPage(BasePage):
     def __init__(self, driver):
-        self.driver = driver
+        super().__init__(driver)
+
+    def open(self, url):
+        self.driver.get(url)
 
     @allure.step('Вводим имя: {name}')
     def check_input_name(self, name):
@@ -42,24 +42,27 @@ class OrderPage:
         WebDriverWait(self.driver,5).until(EC.visibility_of_element_located(OrderPageLocators.INPUT_SELECT_DATE)).click()
         self.driver.find_element(*OrderPageLocators.SELECT_DATE).click()
 
-    @allure.step('Выбираем срок аренды два дня')
-    def check_rental_period_two_days(self):
+    @allure.step('Выбираем срок аренды:  {rental_period}')
+
+    def check_rental_period(self, rental_period):
+
         self.driver.find_element(*OrderPageLocators.INPUT_RENTAL_PERIOD).click()
-        self.driver.find_element(*OrderPageLocators.SELECT_RENTAL_PERIOD_TWO_DAYS).click()
+        match rental_period:
+            case 1:
+                self.driver.find_element(*OrderPageLocators.SELECT_RENTAL_PERIOD_TWO_DAYS).click()
+            case 2:
+                self.driver.find_element(*OrderPageLocators.SELECT_RENTAL_PERIOD_FOUR_DAYS).click()
 
 
-    @allure.step('Выбираем срок аренды четыре дня')
-    def check_rental_period_four_days(self):
-        self.driver.find_element(*OrderPageLocators.INPUT_RENTAL_PERIOD).click()
-        self.driver.find_element(*OrderPageLocators.SELECT_RENTAL_PERIOD_FOUR_DAYS).click()
+    @allure.step('Выбираем цвет самоката: {color}')
 
-    @allure.step('Выбираем цвет самоката черный')
-    def check_scooter_color_black(self):
-        self.driver.find_element(*OrderPageLocators.SCOOTER_COLOR_BLACK).click()
+    def check_scooter_color(self, color):
+        match color:
+            case 'black':
+                self.driver.find_element(*OrderPageLocators.SCOOTER_COLOR_BLACK).click()
+            case 'grey':
+                self.driver.find_element(*OrderPageLocators.SCOOTER_COLOR_GREY).click()
 
-    @allure.step('Выбираем цвет самоката черный')
-    def check_scooter_color_grey(self):
-        self.driver.find_element(*OrderPageLocators.SCOOTER_COLOR_GREY).click()
 
     @allure.step('Вводим комментарий для курьера: {comment}')
     def check_input_comment(self, comment):
@@ -82,7 +85,7 @@ class OrderPage:
         WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(OrderPageLocators.BUTTON_VIEW_STATUS)).click()
 
 
-    def order(self, name, surname, address, phone_number,comment):
+    def create_order(self, name, surname, address, phone_number, rental_period, color, comment):
         self.check_input_name(name)
         self.check_input_surname(surname)
         self.check_input_address(address)
@@ -90,9 +93,11 @@ class OrderPage:
         self.check_input_phone_number(phone_number)
         self.check_click_next()
         self.check_click_date()
-        self.check_rental_period_two_days()
-        self.check_scooter_color_black()
+        self.check_rental_period(rental_period)
+        self.check_scooter_color(color)
         self.check_input_comment(comment)
         self.check_click_next_final()
         self.check_click_yes_final()
+
+        return WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(OrderPageLocators.TEXT_ORDER_SUBMITTED)).text
 

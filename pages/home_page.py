@@ -1,47 +1,41 @@
-import pytest
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from locators.home_page_locators import HomePageLocators
 import allure
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from locators.home_page_locators import HomePageLocators
+from pages.base_page import BasePage
 
 
-class Dropdownlist:
-
+class HomePage(BasePage):
     def __init__(self, driver):
-        self.driver = driver
+        super().__init__(driver)
 
-    @allure.step('Прокрутка до "Вопросы о важном"')
     def scroll_to_questions(self):
+
         element = self.driver.find_element(*HomePageLocators.TEXT_QUESTION_ABOUT_IMPORTANT)
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
         WebDriverWait(self.driver,5).until(EC.visibility_of_element_located(HomePageLocators.TEXT_QUESTION_ABOUT_IMPORTANT))
 
-    @allure.step('Кликаем на первый вопрос, получаем ответ')
-    def check_click_1_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_FIRST_QUESTION)).click()
+    @allure.step('Получаем текст ответа в соответствии с номером вопроса {question_number} на главной странице')
+    def get_answer_text_on_home_page(self, question_number):
 
-    def check_click_2_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_SECOND_QUESTION)).click()
+            button_question_locator = getattr(HomePageLocators, f'BUTTON_QUESTION_{question_number}')
+            label_answer_locator = getattr(HomePageLocators, f'TEXT_ANSWER_{question_number}')
 
-    def check_click_3_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_FHREE_QUESTION)).click()
+            self.scroll_to_questions()
+            self.driver.find_element(*button_question_locator).click()
+            return self.driver.find_element(*label_answer_locator).text
 
-    def check_click_4_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_4_QUESTION)).click()
 
-    def check_click_5_question(self):
+    @allure.step('Скроллим до кнопки "Заказть"')
+    def scroll_to_order_button(self):
+        self.scroll_to_element(HomePageLocators.BUTTON_ORDER_BUTTON_OF_THE_PAGE)
 
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_5_QUESTION)).click()
+    @allure.step('Скроллим до кнопки "Заказть" и нажимаем кнопку')
+    def check_click_button_bottom_page(self):
+        element = self.driver.find_element(*HomePageLocators.BUTTON_ORDER_BUTTON_OF_THE_PAGE)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        WebDriverWait(self.driver, 5).until(
+            EC.visibility_of_element_located(HomePageLocators.BUTTON_ORDER_BUTTON_OF_THE_PAGE)).click()
 
-    def check_click_6_question(self):
-
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_6_QUESTION)).click()
-
-    def check_click_7_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_7_QUESTION)).click()
-
-    def check_click_8_question(self):
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(HomePageLocators.CLICK_8_QUESTION)).click()
 
 

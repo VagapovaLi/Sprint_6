@@ -2,20 +2,31 @@ from selenium.webdriver.common.by import By
 
 class HomePageLocators:
 
+
+    BUTTON_ORDER_BUTTON_OF_THE_PAGE = (By.XPATH, '//div[4]//button[1][text()="Заказать"]')                                                 # кнопка внизу  страницы
     TEXT_QUESTION_ABOUT_IMPORTANT = (By.XPATH,'//div[text()="Вопросы о важном"]')
-    CLICK_FIRST_QUESTION = (By.XPATH,'//div[text()="Сколько это стоит? И как оплатить?"]')                                       #клик по первому вопросу "Сколько это стоит? И как оплатить?"
-    TEXT_FIRST_RS = (By.XPATH, '//p[text()="Сутки — 400 рублей. Оплата курьеру — наличными или картой."]')                               #ответ на первый влпрос
-    CLICK_SECOND_QUESTION = (By.XPATH, '//div[text()="Хочу сразу несколько самокатов! Так можно?"]')
-    TEXT_SECOND_RS = (By.XPATH, '//p[contains(text(), "Пока что у нас так: один заказ — один самокат")]')
-    CLICK_FHREE_QUESTION = (By.XPATH, '//div[text()="Как рассчитывается время аренды?"]')
-    TEXT_FHREE_RS = (By.XPATH, '//p[contains(text(), "оформляете заказ на 8 мая")]')
-    CLICK_4_QUESTION = (By.XPATH, '//div[text()="Можно ли заказать самокат прямо на сегодня?"]')
-    TEXT_4_RS = (By.XPATH, '//p[contains(text(), "Только начиная с завтрашнего дня. Но скоро станем расторопнее.")]')
-    CLICK_5_QUESTION = (By.XPATH, '//div[text()="Можно ли продлить заказ или вернуть самокат раньше?"]')
-    TEXT_5_RS = (By.XPATH, '//p[contains(text(), "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.")]')
-    CLICK_6_QUESTION = (By.XPATH, '//div[text()="Вы привозите зарядку вместе с самокатом?"]')
-    TEXT_6_RS = (By.XPATH, '//p[contains(text(), "Самокат приезжает к вам с полной зарядкой.")]')
-    CLICK_7_QUESTION = (By.XPATH, '//div[text()="Можно ли отменить заказ?"]')
-    TEXT_7_RS = (By.XPATH, '//p[contains(text(), "Да, пока самокат не привезли.")]')
-    CLICK_8_QUESTION = (By.XPATH, '//div[text()="Я жизу за МКАДом, привезёте?"]')
-    TEXT_8_RS = (By.XPATH, '//p[contains(text(), "Да, обязательно. Всем самокатов! И Москве, и Московской области.")]')
+
+    BUTTON_QUESTION_0  = (By.ID, 'accordion__heading-0')
+    TEXT_ANSWER_0 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-0"]')
+
+    BUTTON_QUESTION_1  = (By.ID, 'accordion__heading-1')
+    TEXT_ANSWER_1 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-1"]')
+
+    BUTTON_QUESTION_2  = (By.ID, 'accordion__heading-2')
+    TEXT_ANSWER_2 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-2"]')
+
+    BUTTON_QUESTION_3  = (By.ID, 'accordion__heading-3')
+    TEXT_ANSWER_3 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-3"]')
+
+    BUTTON_QUESTION_4  = (By.ID, 'accordion__heading-4')
+    TEXT_ANSWER_4 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-4"]')
+
+    BUTTON_QUESTION_5  = (By.ID, 'accordion__heading-5')
+    TEXT_ANSWER_5 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-5"]')
+
+    BUTTON_QUESTION_6  = (By.ID, 'accordion__heading-6')
+    TEXT_ANSWER_6 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-6"]')
+
+    BUTTON_QUESTION_7  = (By.ID, 'accordion__heading-7')
+    TEXT_ANSWER_7 = (By.XPATH, '//div[@aria-labelledby="accordion__heading-7"]')
+

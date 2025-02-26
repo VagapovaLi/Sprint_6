@@ -1,57 +1,40 @@
+import credentials
 import pytest
-from selenium import webdriver
-from locators.order_page_locators import OrderPageLocators
 import allure
 from pages.order_page import OrderPage
-from pages.base_page import BasePage
+from pages.home_page import HomePage
 
-MAIN_URL = "https://qa-scooter.praktikum-services.ru/"
-DZEN_URL ='https://dzen.ru/?yredirect=true'
-
+@pytest.mark.order_page
 class TestOrderPage:
-    @pytest.fixture(scope='function')
-    def driver(self):
-        self.driver = webdriver.Firefox()
-        self.driver.get('https://qa-scooter.praktikum-services.ru/')
-        yield self.driver
-        self.driver.quit()
-
-
-    @pytest.mark.parametrize("name, surname, address, phone_number, comment", [
-        ('Петя', 'Пупкин', 'Пупкинская 8', '89682548955', 'Привозите быстрей'),
-    ])
 
     @allure.title("Заказ сомаката через кнопкк 'Заказть' в вверху страницы с переходом на главную страницу" )
-    def test_order_scooter_button_top_page(self, driver, name, surname, address, phone_number, comment):
+    def test_order_scooter_button_top_page(self, driver):
         order_page = OrderPage(driver)
-        base_page = BasePage(driver)
-        base_page.check_click_button_top_page()
+        order_page.open(credentials.URLS.get('BASE_URL'))
+        order_page.check_click_button_top_page()
+        actual_order_message = order_page.create_order(*credentials.ORDER_CASE_1)
 
-        order_page.order(name=name, surname=surname, address=address, phone_number=phone_number, comment=comment)
-
-        success_message = driver.find_element(*OrderPageLocators.TEXT_ORDER_SUBMITTED).text
-        assert "Заказ оформлен" in success_message
+        assert 'Заказ оформлен' in actual_order_message, 'Order creation failed'
 
         order_page.check_click_view_status()
-        base_page.check_click_button_scooter()
-        assert driver.current_url == MAIN_URL
+        order_page.check_click_button_scooter()
 
+        assert driver.current_url == credentials.URLS.get('BASE_URL'), 'URL does not match the expected base URL'
 
-    @pytest.mark.parametrize("name, surname, address, phone_number, comment", [
-        ('Вася', 'Иванов', 'Ивановская 10', '89161234567', 'Привозите аккуратней'),
-    ])
-
-    @allure.title("Заказ сомаката через кнопкк 'Заказть' в вверху страницы")
-    def test_order_scooter_button_bottom_page(self, driver, name, surname, address, phone_number, comment):
+    @allure.title("Заказ сомаката через кнопкк 'Заказть' в вверху страницы с переходом на главную страницу Дзен")
+    def test_order_scooter_button_bottom_page(self, driver):
+        home_page = HomePage(driver)
+        home_page.open(credentials.URLS.get('BASE_URL'))
+        home_page.check_click_button_bottom_page()
         order_page = OrderPage(driver)
-        base_page = BasePage(driver)
-        base_page.check_click_button_bottom_page()
+        actual_order_message = order_page.create_order(*credentials.ORDER_CASE_2)
 
-        order_page.order(name=name, surname=surname, address=address, phone_number=phone_number, comment=comment)
-
-        success_message = driver.find_element(*OrderPageLocators.TEXT_ORDER_SUBMITTED).text
-        assert "Заказ оформлен" in success_message
+        assert 'Заказ оформлен' in actual_order_message, 'Order creation failed'
 
         order_page.check_click_view_status()
-        base_page.click_on_the_yandex_logo_and_switch_window()
-        assert self.driver.current_url == DZEN_URL, f"Ожидался URL: {DZEN_URL}, но получен: {self.driver.current_url}"
+        order_page.click_on_the_yandex_logo_and_switch_window()
+        current_url = order_page.get_current_url()
+        expected_url = credentials.URLS.get('DZEN_URL')
+
+        assert current_url == expected_url, f"Ожидался URL: {expected_url}, но получен: {current_url}"
+
